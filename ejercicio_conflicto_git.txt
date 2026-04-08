@@ -1,0 +1,128 @@
+====================================================================
+GUIA PRACTICA: CÓMO CREAR Y RESOLVER UN CONFLICTO EN GIT (CON PULL REQUESTS)
+PROYECTO: JAVA SPRING BOOT (practicaCrud)
+====================================================================
+Participantes: 
+- Henao (Tú)
+- Silva (Tu compañero)
+
+Resumen del flujo solicitado: 
+1. Ambos editan la misma línea del archivo MAIN de Java (PracticaCrudApplication.java) en sus propias ramas.
+2. Merge de la rama de Henao hacia Silva (donde estalla el conflicto local).
+3. Pull Request (PR) de la rama de Silva hacia dev en GitHub.
+4. Pull Request (PR) de dev hacia main en GitHub.
+
+--------------------------------------------------------------------
+PASO 0: PREPARACIÓN ANTES DE EMPEZAR
+--------------------------------------------------------------------
+Ya que tienen el proyecto base de Java, ambos deben asegurarse de 
+partir de la misma versión descargada de la rama "dev".
+
+1. En la terminal (tanto Henao como Silva en sus respectivos PC):
+   git checkout dev
+   git pull origin dev
+
+
+--------------------------------------------------------------------
+PASO 1: HENAO HACE SU PARTE
+--------------------------------------------------------------------
+1. Henao se va a su rama de trabajo:
+   git checkout Feature/activity-Henao
+
+2. Henao abre el archivo principal de Spring Boot: 
+   practicaCrud/src/main/java/edu/co/ustavillavicencio/practicacrud/PracticaCrudApplication.java
+
+3. Modifica el método `main` agregando un "System.out.println" justo 
+   debajo de la instrucción SpringApplication.run. Que quede así:
+
+    public static void main(String[] args) {
+        SpringApplication.run(PracticaCrudApplication.class, args);
+        System.out.println("Proyecto iniciado - Henao estuvo aqui");
+    }
+
+4. Henao guarda y SUBE SU RAMA A GITHUB (sin mezclar a dev):
+   git add .
+   git commit -m "Agregado mensaje de inicio por Henao"
+   git push origin Feature/activity-Henao
+
+
+--------------------------------------------------------------------
+PASO 2: SILVA HACE SU PARTE (En paralelo)
+--------------------------------------------------------------------
+1. Silva se va a su rama (asegurándose de partir de la misma base original):
+   git checkout Feature/activity-Silva
+
+2. Silva abre el MISMO archivo `PracticaCrudApplication.java` 
+   (Para él todavía no existe el "println" de Henao, porque está en su propia rama).
+
+3. Silva modifica el método `main` en esa MISMA línea, pero con su mensaje:
+
+    public static void main(String[] args) {
+        SpringApplication.run(PracticaCrudApplication.class, args);
+        System.out.println("Proyecto iniciado - Silva lo mejoro");
+    }
+
+4. Silva guarda y sube SU rama:
+   git add .
+   git commit -m "Agregado mensaje de inicio por Silva"
+   git push origin Feature/activity-Silva
+
+
+--------------------------------------------------------------------
+PASO 3: MERGE DE HENAO A SILVA Y CONFLICTO
+--------------------------------------------------------------------
+Silva decide traerse los cambios de Henao a su propia rama antes 
+de mandar todo a dev (haciendo el Merge de Henao a Silva).
+
+1. Silva lanza en su terminal:
+   git pull origin Feature/activity-Henao  
+
+¡BAM! Error de conflicto. Git detecta que ambos tocaron la misma línea 
+en el mismo archivo `.java` y dirá algo como: 
+"CONFLICT (content): Merge conflict in .../PracticaCrudApplication.java"
+
+
+--------------------------------------------------------------------
+PASO 4: SOLUCIONAR EL CONFLICTO EN LOCAL
+--------------------------------------------------------------------
+1. Silva abre `PracticaCrudApplication.java` en Visual Studio Code. Verá que 
+   Git insertó unos marcadores en el código:
+
+<<<<<<< HEAD
+        System.out.println("Proyecto iniciado - Silva lo mejoro");
+=======
+        System.out.println("Proyecto iniciado - Henao estuvo aqui");
+>>>>>>> origin/Feature/activity-Henao
+
+2. Silva borra cuidadosamente las marcas (<<<<, ====, >>>>) y unifica el código final a:
+
+        System.out.println("Proyecto iniciado - Modificado por Henao y Silva");
+
+3. Silva guarda y le avisa a Git que ya solucionó el problema:
+   git add .
+   git commit -m "Conflicto resuelto en la clase Main entre Henao y Silva"
+   git push origin Feature/activity-Silva
+
+(¡La rama de Silva ahora tiene todo solucionado localmente y está apta para subirse a dev!)
+
+
+--------------------------------------------------------------------
+PASO 5: PULL REQUEST (PR) A DEV
+--------------------------------------------------------------------
+1. Vayan a la página del repositorio en GitHub.
+2. Pestaña "Pull requests" -> Botón verde "New pull request".
+3. Arriba donde dice `base:`, seleccionan `dev`. 
+   Y donde dice `compare:`, seleccionan `Feature/activity-Silva`.
+4. Crean el PR dándole a "Create pull request" y luego al 
+   botón verde final de "Merge pull request".
+   ¡Todo se mezclará limpiecito a dev porque el conflicto ya se resolvió localmente!
+
+
+--------------------------------------------------------------------
+PASO 6: PULL REQUEST (PR) A MAIN
+--------------------------------------------------------------------
+1. Nuevamente en GitHub, pestaña "Pull requests" -> "New pull request".
+2. Base: `main` <- Compare: `dev`.
+3. Revisan que esté todo listo, crean el PR y lo aprueban con "Merge pull request".
+
+¡MISIÓN CUMPLIDA! Resolvieron un conflicto real en un archivo `.java` de Spring Boot.
