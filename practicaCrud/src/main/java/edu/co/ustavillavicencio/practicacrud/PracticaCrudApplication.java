@@ -7,10 +7,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PracticaCrudApplication {
 
     public static void main(String[] args)   {
-;       SpringApplication.run(PracticaCrudApplication.class, args);
-
+       SpringApplication.run(PracticaCrudApplication.class, args);
+        System.out.println("Proyecto iniciado - Henao estuvo aqui");
         System.out.println("Proyecto incluido, Silva estuvo aqui");
         System.out.println("Con esto tiene que dar conflicto");
 
     }
+
 }
